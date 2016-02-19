@@ -1,0 +1,72 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" 
+    DefaultTargets="RestoreNugetPackagtes" ToolsVersion="4.0">
+  
+  <!--Properties and itemgroups start-->
+    <PropertyGroup>
+                    <!--BasicPaths-->
+                    <ProjectDirectory Condition="'$(ProjectDirectory)'==''">D:\SocialGoal\SocialGoal-master\source</ProjectDirectory>
+                    <PlugInDirectory Condition="'$(PlugInDirectory)'==''">$(ProjectDirectory)\Build\Packages</PlugInDirectory>
+                    <GitDirctory Condition="'$(GitDirctory)'==''">"$(PlugInDirectory)\Git\bin\Git.exe"</GitDirctory>
+                    <MSBuildDirectory Condition="'$(MSBuildDirectory)'==''">"$(PlugInDirectory)\v4.0.30319\MSBuild.exe"</MSBuildDirectory>
+                    <SolutionFileDir Condition="'$(SolutionFileDir)'==''">$(ProjectDirectory)\SocialGoal.sln</SolutionFileDir>
+                     
+                    <!--Git Operations-->
+                    <RepoDirectory Condition="'$(RepoDirectory)'==''">"https://github.com/MarlabsInc/SocialGoal.git"</RepoDirectory>
+                    <CloneDiretory Condition="'$(CloneDiretory)'==''">"C:\src"</CloneDiretory>
+                    <WorkingBranchName Condition="'$(WorkingBranchName)'==''">master</WorkingBranchName>
+
+                    <!--Assembly information update-->
+                    <MajorVersion Condition="'$(MajorVersion)'==''">2015</MajorVersion>
+                    <MinorVersion Condition="'$(MinorVersion)'==''">0219</MinorVersion>
+                    <BuildNumber Condition="'$(BuildNumber)'==''">01</BuildNumber>
+                    <ReleaseNumber Condition="'$(ReleaseNumber)'==''">01</ReleaseNumber>
+      
+                    <!--NUget Path-->
+                    <NugetPathUrl Condition="'$(NugetPathUrl)'==''">$(PlugInDirectory)\NuGet\Nuget.exe</NugetPathUrl>
+      
+    </PropertyGroup>
+  <ItemGroup>
+    <AssemblyInfoFiles Include="$(ProjectDirectory)\**\Properties\AssemblyInfo.cs"/>
+  </ItemGroup>
+  <Import Project="$(PlugInDirectory)\ExtensionPack\4.0\MSBuild.ExtensionPack.tasks"/>
+  <!--Properties and itemgroups end-->
+  <!--Git Operations start-->
+<Target Name="BeginGitOperations">
+    <Message Text="Git Directory - $(GitDirctory)" />
+    <Message Text="MSBuild Directory - $(MSBuildDirectory)"/>
+</Target>
+
+<Target Name="GitCloneIfNotExists" DependsOnTargets="BeginGitOperations">
+    <Message Text="Starting Git clone"/>
+    <Exec Command="$(GitDirctory) clone $(RepoDirectory)"/>
+</Target>
+
+<Target Name="GitPulIfExists" DependsOnTargets="BeginGitOperations" Condition="'$(CloneDiretory)'!=''">
+  <Message Text="Starting Git pull"/>
+  <!--<Exec Command="$(GitDirctory) pull"/>-->
+</Target>
+
+<Target Name="GitCheckout" DependsOnTargets="BeginGitOperations" Condition="'$(CloneDiretory)'!=''">
+  <Message Text="Starting Git checkout"/>
+  <!--<Exec Command="$(GitDirctory) checkout $(WorkingBranchName)"/>-->
+</Target>
+ <!--Git Operations end-->
+  
+<!--Beginning assembly info update-->
+  <Target Name="BeginAssemblyInfoUpdate" DependsOnTargets="BeginGitOperations"  >
+    <Message Text="$(MSBuildExtensionsPath)"/>
+    <!--<AssemblyInfo
+        AssemblyInfoFiles="@(AssemblyInfoFiles)"
+        AssemblyVersion="$(MajorVersion).$(MinorVersion).$(BuildNumber).$(ReleaseNumber)"/>-->
+  </Target>
+  
+<!--Ending Assembly info update-->
+  
+  <!--Restore Nuget packages start-->
+  <Target Name="RestoreNugetPackagtes" DependsOnTargets="BeginAssemblyInfoUpdate">
+    <Exec Command="$(NugetPathUrl) restore $(SolutionFileDir)'" ContinueOnError="false"/>
+  </Target>
+  <!--Restore Nuget packages end-->
+  
+ 
+</Project>
