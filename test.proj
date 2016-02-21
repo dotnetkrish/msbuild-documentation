@@ -1,0 +1,94 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="CleanSolution" ToolsVersion="4.0">
+  
+  <!--Properties and itemgroups start-->
+    <PropertyGroup>
+                    <!--BasicPaths-->
+                    <ProjectDirectory Condition="'$(ProjectDirectory)'==''">D:\SocialGoal\source</ProjectDirectory>
+                    <PlugInDirectory Condition="'$(PlugInDirectory)'==''">$(ProjectDirectory)\Packages</PlugInDirectory>
+                    <GitDirctory Condition="'$(GitDirctory)'==''">"$(PlugInDirectory)\Git\bin\Git.exe"</GitDirctory>
+                    <MSBuildDirectory Condition="'$(MSBuildDirectory)'==''">"$(PlugInDirectory)\MSBuild\14.0\Bin\MSBuild.exe"</MSBuildDirectory>
+                    <SolutionFileDir Condition="'$(SolutionFileDir)'==''">$(ProjectDirectory)\SocialGoal.sln</SolutionFileDir>
+                     
+                    <!--Git Operations-->
+                    <RepoDirectory Condition="'$(RepoDirectory)'==''">"https://github.com/MarlabsInc/SocialGoal.git"</RepoDirectory>
+                    <CloneDiretory Condition="'$(CloneDiretory)'==''">"C:\src"</CloneDiretory>
+                    <WorkingBranchName Condition="'$(WorkingBranchName)'==''">master</WorkingBranchName>
+
+                    <!--Assembly information update-->
+                    <MajorVersion Condition="'$(MajorVersion)'==''">2015</MajorVersion>
+                    <MinorVersion Condition="'$(MinorVersion)'==''">0219</MinorVersion>
+                    <BuildNumber Condition="'$(BuildNumber)'==''">01</BuildNumber>
+                    <ReleaseNumber Condition="'$(ReleaseNumber)'==''">01</ReleaseNumber>
+      
+                    <!--NUget Path-->
+                    <NugetPathUrl Condition="'$(NugetPathUrl)'==''">$(PlugInDirectory)\MSBuild\ExtensionPack\4.0\Resources</NugetPathUrl>
+      
+                    
+      
+    </PropertyGroup>
+ 
+   <ItemGroup>
+    <AssemblyInfoFiles Include="$(ProjectDirectory)\**\Properties\AssemblyInfo.cs"/>
+  </ItemGroup>
+  
+  <!--Project Files to compile start-->
+   <ItemGroup>
+     <SolutionFiles Include="D:\SocialGoal\source\**\*.csproj"/>
+   </ItemGroup>   
+ <!--Project Files to compile end-->
+  <Import Project="$(PlugInDirectory)\MsBuild.ExtensionPack.Task.1.0.3\tools\MSBuild.ExtensionPack.tasks"/>
+  <!--Properties and itemgroups end-->
+  <!--Git Operations start-->
+<Target Name="BeginGitOperations">
+    <Message Text="Git Directory - $(GitDirctory)" />
+    <Message Text="MSBuild Directory - $(MSBuildDirectory)"/>
+</Target>
+
+<Target Name="GitCloneIfNotExists" DependsOnTargets="BeginGitOperations">
+    <Message Text="Starting Git clone"/>
+    <Exec Command="$(GitDirctory) clone $(RepoDirectory)"/>
+</Target>
+
+<Target Name="GitPulIfExists" DependsOnTargets="BeginGitOperations" Condition="'$(CloneDiretory)'!=''">
+  <Message Text="Starting Git pull"/>
+  <!--<Exec Command="$(GitDirctory) pull"/>-->
+</Target>
+
+<Target Name="GitCheckout" DependsOnTargets="BeginGitOperations" Condition="'$(CloneDiretory)'!=''">
+  <Message Text="Starting Git checkout"/>
+  <!--<Exec Command="$(GitDirctory) checkout $(WorkingBranchName)"/>-->
+</Target>
+ <!--Git Operations end-->
+  
+<!--Beginning assembly info update-->
+  <Target Name="BeginAssemblyInfoUpdate" DependsOnTargets="BeginGitOperations"  >
+    <Message Text="$(MSBuildExtensionsPath)"/>
+    <!--<AssemblyInfo
+        AssemblyInfoFiles="@(AssemblyInfoFiles)"
+        AssemblyVersion="$(MajorVersion).$(MinorVersion).$(BuildNumber).$(ReleaseNumber)"/>-->
+  </Target>
+  
+<!--Ending Assembly info update-->
+  
+  <!--Restore Nuget packages start-->
+  <Target Name="RestoreNugetPackages" DependsOnTargets="BeginAssemblyInfoUpdate">
+    <!--<Exec Command="$(NugetPathUrl)\Nuget.exe install $(NugetPathUrl)\packages.config" ContinueOnError="false"/>-->
+  </Target>
+  <!--Restore Nuget packages end-->
+  
+  <Target Name="CleanSolution" DependsOnTargets="RestoreNugetPackages">
+    <MSBuild Projects="@(SolutionFiles)" Targets="Clean" Properties="OutputPath=$(ProjectDirectory)\..\bin\"/>
+  </Target>
+  
+  <Target Name="ReBuildSolution" DependsOnTargets="CleanSolution">
+    <MSBuild Projects="@(SolutionFiles)" Targets="Rebuild" Properties="OutputPath=$(ProjectDirectory)\..\bin\"/>
+  </Target>
+
+  <Target Name="BuildSolution" DependsOnTargets="ReBuildSolution">
+    <MSBuild Projects="@(SolutionFiles)" Targets="Build" Properties="OutputPath=$(ProjectDirectory)\..\bin\"/>
+  </Target>
+
+  <Target Name="WebConfigTransformations" DependsOnTargets="BuildSolution">
+    
+  </Target>
+</Project>
