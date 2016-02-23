@@ -1,0 +1,8 @@
+C:\Program Files (x86)\Microsoft Visual Studio 14.0>"C:\Program Files (x86)\IIS\
+Microsoft Web Deploy V3\msdeploy.exe" -verb:sync -source:package='D:\SocialGoal\
+SocialGoal-master\source\SocialGoal\obj\Debug\Package\SocialGoal.Web.zip' -dest:
+auto,wmsvc='https://113.128.166.201:8172/msdeploy.axd?site=Default%20Web%20Site'
+,userName='Administrator',password='****',includeAcls='False' -disableLink:AppPo
+olExtension -disableLink:ContentExtension -disableLink:CertificateExtension -set
+ParamFile="D:\SocialGoal\SocialGoal-master\source\SocialGoal\obj\Debug\Package\S
+ocialGoal.Web.SetParameters.xml" -allowUntrusted

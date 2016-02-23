@@ -1,0 +1,19 @@
+More Information: Could not connect to the remote computer ("http") using the specified process ("Web Management Service") because the server did not respond. Make sure that the process ("Web Management Service") is started on the remote computer
+
+
+-verb:sync -source:package='E:\Test-MsDeploy\Package\TestProjectA.zip' -dest:auto,wmsvc='https://{IP}:8172/msdeploy.axd?site=Default%20Web%20Site',user????Name='******',password='******',includeAcls='False' -disableLink:AppPoolExtension -disableLink:ContentExtension -disableLink:CertificateExtension -setParamFile="E:\Test-MsDeploy\Package\TestProjectA.SetParameters.xml" -allowUntrusted
+
+
+
+Microsoft Web Deploy V3\msdeploy.exe" -verb:sync -source:package="D:\SocialGoal\SocialGoal-master\source\SocialGoal\obj\Debug\Package\SocialGoal.Web.zip" -dest:
+
+
+
+C:\Program Files (x86)\Microsoft Visual Studio 14.0>"C:\Program Files (x86)\IIS\
+Microsoft Web Deploy V3\msdeploy.exe" -verb:sync -source:package='D:\SocialGoal\
+SocialGoal-master\source\SocialGoal\obj\Debug\Package\SocialGoal.Web.zip' -dest:
+auto,wmsvc='https://113.128.166.201:8172/msdeploy.axd?site=Default%20Web%20Site'
+,userName='Administrator',password='****',includeAcls='False' -disableLink:AppPo
+olExtension -disableLink:ContentExtension -disableLink:CertificateExtension -set
+ParamFile="D:\SocialGoal\SocialGoal-master\source\SocialGoal\obj\Debug\Package\S
+ocialGoal.Web.SetParameters.xml" -allowUntrusted
