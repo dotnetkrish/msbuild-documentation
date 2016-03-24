@@ -382,7 +382,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="panel panel-primary" style="border-color:#ffffff">
-						<div style="margin:2% 2%">
+						<div style="margin:2% 2%;float:left;width:50%;">
 						<div class="btn-group" style="margin-left:2%;">
 											  <button class="btn dropdown-toggle" data-toggle="dropdown">Region <span class="caret"></span></button>
 											  <ul class="dropdown-menu dropdown-menu-region">
@@ -446,31 +446,42 @@
 											  <ul class="dropdown-menu dropdown-menu-status">
 												<li value="0" ><a href="#"> Remainder Mail </a></li>
 												<li value="1"><a href="#"> Deactivation Mail </a></li>
-												<li value="2"><a href="#"> Suspension Mail </a></li>
+												<li value="2"><a href="#"> Add As Defaulter </a></li>
 											  </ul>
 				</div>
-				<a class="btn btn-primary btn-lg btn-round save" href="#" style="margin-left:2%;">save</a>
+				<!--<a class="btn btn-primary btn-lg btn-round add" href="#" style="">Add</a>-->
+				<button class="btn btn-info btn-circle btn-xl add" style="margin-left:2%;"  type="button"><i class="icon-check"></i>
+                            </button>
+							
+								
+				
 				</div>
-				<div id="tree-view" style="padding:0.3%;padding:1% 1%; font-family:Arial;font-size: 24px;  line-height: 1.428571429;color: #333333;background-color: #ffffff;color: #468847;background-color: #dff0d8;border-color: #d6e9c6;"><i class="icon-long-arrow-right"></i> <span id="tree-view-region"></span></div>
+				
+				<div class="table-responsive" style="width:40%;float:right;">
+                                <table id="dataTables-example" class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:5px;">Selection</th>
+                                            <th>Status</th>
+                                            <th>Priority    <a herf="#"><i class="icon-chevron-up"></i></a>   <a herf="#"><i class="icon-chevron-down"></i></a></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="addbody">
+                                        <tr class="odd gradeX">
+											
+                                        </tr>
+                                        
+                                    </tbody>
+                                </table>
+					</div>
+				<div id="tree-view" style="padding:0.3%;padding:1% 1%; font-family:Arial;font-size: 24px;  line-height: 1.428571429;color: #333333;background-color: #ffffff;color: #468847;background-color: #dff0d8;border-color: #d6e9c6;clear:both;"><i class="icon-long-arrow-right"></i> <span id="tree-view-region"></span></div>
                             <div class="panel-heading">
-                                <b class="fa fa-clock-o fa-fw input">Timeline</b> 
+                                <b class="fa fa-clock-o fa-fw input">Enter Workflow Name above</b> 
                             </div>
                             <div class="panel-body">
 							
                                 <ul class="timeline">
-                                    <li>
-                                        <div class="timeline-badge success">
-                                            <i class=" icon-pencil"></i>
-                                        </div>
-                                        <div class="timeline-panel">
-                                            <div class="timeline-heading">
-                                                <h4 class="timeline-title">Remainder Mail</h4>
-                                            </div>
-                                            <div class="timeline-body">
-                                                <p>Remainder mails are sent for the invoice between 0-30 </p>
-                                            </div>
-                                        </div>
-                                    </li>
+                                    
                                 </ul>
 								
 								
@@ -483,7 +494,8 @@
                                                     </select>-->
                             </div>
 							 
-						<!--<input type="submit" value="save" style="margin-left:50%"/>-->
+						<input type="submit" value="save" style="margin-left:50%" class="btn btn-primary btn-lg btn-round save"/>
+						
 						
 
                         </div>
@@ -509,6 +521,11 @@
     </div>
     <!--END FOOTER -->
 	<span id="hidden" hidden="true">asdasad</span>
+	<span id="hiddenworkflowstatusname" hidden="true">workflowstatusname</span>
+	<span id="hiddentotalstatusitem" hidden="true">totalstatusitem</span>
+	<div id="hiddendiv" hidden="true"><ul class="timeline">
+                                    
+                                </ul></div>
 
      <!-- GLOBAL SCRIPTS -->
     <script src="assets/plugins/jquery-2.0.3.min.js"></script>
@@ -519,10 +536,15 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
-			$('.dropdown-menu-status').click(function() {
-			alert($(this).parent('li').index());
+			var count=0;
+			$('.dropdown-menu-status li').click(function() {
+			count++;
+			var s=$(this).val( $(this).attr("value") ).val();
+			var workflowstatusname=$(this).text();
+			$("#hidden").text(s);
+			$("#hiddenworkflowstatusname").text(workflowstatusname);
+			$("#hiddentotalstatusitem").text(count);
 			});
-			alert($("#hidden").html());
             $('#Input').keyup(function() {
              $('.input').html($(this).val().toUpperCase());
 			 if($(this).val()==""){$('.input').html("no name".toUpperCase());}
@@ -533,18 +555,22 @@ $(document).ready(function() {
         });
 		
 		$('.save').on('click', function() {
-    $('.panel-body .timeline').empty();
-	var arr=["<div class=\"timeline-badge success\"><i class=\" icon-pencil\"></i></div><div class=\"timeline-panel\"><div class=\"timeline-heading\"><h4 class=\"timeline-title\">Remainder Mail</h4></div><div class=\"timeline-body\"><p>Remainder mails are sent for the invoice between 0-30 </p></div></div>",
-	"<div class=\"timeline-badge warning\"><i class=\"icon-credit-card\"></i></div><div class=\"timeline-panel\"><div class=\"timeline-heading\"><h4 class=\"timeline-title\">Deactivation Mail</h4></div><div class=\"timeline-body\"> <p>Deactivation mails are sent for the invoice between 31-60</p></div></div>",
-	"<div class=\"timeline-badge danger\"><i class=\"icon-map-marker\"></i></div><div class=\"timeline-panel\"><div class=\"timeline-heading\"><h4 class=\"timeline-title\">Add as Defaulter</h4></div><div class=\"timeline-body\"><p>Defaulter mails are sent for invoices between 60-90</p></div></div>",
+				$('.panel-body .timeline').empty();
+				$('.save').hide();
+				$('.panel-body .timeline').append("<li><b>Saved!!</b><li>")
+				});
+	
+		
+		$('.add').on('click', function() {
+    
+	var arr=["<div class=\"timeline-badge success\"><i class=\" icon-pencil\"></i></div><div class=\"timeline-panel\"><div class=\"timeline-heading\"><h4 class=\"timeline-title\">Remainder Mail</h4></div><div class=\"timeline-body\"><p>Remainder mails will be sent for the invoice dates between 0 and 30 </p></div></div>",
+	"<div class=\"timeline-badge warning\"><i class=\"icon-credit-card\"></i></div><div class=\"timeline-panel\"><div class=\"timeline-heading\"><h4 class=\"timeline-title\">Deactivation Mail</h4></div><div class=\"timeline-body\"> <p>Deactivation mails will be sent for the invoice dates between 31 and 60</p></div></div>",
+	"<div class=\"timeline-badge danger\"><i class=\"icon-map-marker\"></i></div><div class=\"timeline-panel\"><div class=\"timeline-heading\"><h4 class=\"timeline-title\">Add as Defaulter</h4></div><div class=\"timeline-body\"><p>Defaulter mails will be sent for invoice dates between 60 and 90</p></div></div>",
 	"<div class=\"timeline-badge\"><i class=\"icon-envelope-alt\"></i></div><div class=\"timeline-panel\"><div class=\"timeline-heading\"><h4 class=\"timeline-title\">Disconnect the service</h4></div><div class=\"timeline-body\"><p>Disconnects the service</p></div></div>",
 	"<div class=\"timeline-badge info\"><i class=\"icon-check\"></i></div><div class=\"timeline-panel\"><div class=\"timeline-heading\"><h4 class=\"timeline-title\">Deactivate the service</h4></div><div class=\"timeline-body\"><p>Deactivates the service</p></div>"
 	]
     $.each(new Array(arr), function(i) {
-	
-	
-	for(var i=0;i<=selectedIndex;i++)
-	{
+		var i=$("#hidden").text();
 		if(i%2!=0){
 		var li='<li class="timeline-inverted">';
         		}
@@ -552,40 +578,13 @@ $(document).ready(function() {
 		var li='<li>';
 		}
 		$(li).html(arr[i]).appendTo(".timeline");
-	}
     });
-	});
+	
+		var code=$("#hiddenworkflowstatusname").text();
+		$(".addbody").append("<tr><td><input type=\"checkbox\" ></td><td>"+code+"</td><td><a href=\"#\">Delete</a></td></tr>");
+		});
         });
 
-	/*$( document ).ready(function() {
-	$.ajax({
-		dataType: "json",
-		url: "D:\enterprisecollection\bs-admin-bcore\bs-admin-bcore\template\newfile.json",
-		success: function(data){ alert("yes");
-}});
-    $('select').on('change', function() {
-    $('.panel-body .timeline').empty();
-	var arr=["<div class=\"timeline-badge success\"><i class=\" icon-pencil\"></i></div><div class=\"timeline-panel\"><div class=\"timeline-heading\"><h4 class=\"timeline-title\">Remainder Mail</h4></div><div class=\"timeline-body\"><p>Remainder mails are sent for the invoice between 0-30 </p></div></div>",
-	"<div class=\"timeline-badge warning\"><i class=\"icon-credit-card\"></i></div><div class=\"timeline-panel\"><div class=\"timeline-heading\"><h4 class=\"timeline-title\">Deactivation Mail</h4></div><div class=\"timeline-body\"> <p>Deactivation mails are sent for the invoice between 31-60</p></div></div>",
-	"<div class=\"timeline-badge danger\"><i class=\"icon-map-marker\"></i></div><div class=\"timeline-panel\"><div class=\"timeline-heading\"><h4 class=\"timeline-title\">Add as Defaulter</h4></div><div class=\"timeline-body\"><p>Defaulter mails are sent for invoices between 60-90</p></div></div>",
-	"<div class=\"timeline-badge\"><i class=\"icon-envelope-alt\"></i></div><div class=\"timeline-panel\"><div class=\"timeline-heading\"><h4 class=\"timeline-title\">Disconnect the service</h4></div><div class=\"timeline-body\"><p>Disconnects the service</p></div></div>",
-	"<div class=\"timeline-badge info\"><i class=\"icon-check\"></i></div><div class=\"timeline-panel\"><div class=\"timeline-heading\"><h4 class=\"timeline-title\">Deactivate the service</h4></div><div class=\"timeline-body\"><p>Deactivates the service</p></div>"
-	]
-    $.each(new Array(arr), function(i) {
-	var selectedIndex=$('select')[0].selectedIndex;
-	for(var i=0;i<=selectedIndex;i++)
-	{
-		if(i%2!=0){
-		var li='<li class="timeline-inverted">';
-        		}
-		else{
-		var li='<li>';
-		}
-		$(li).html(arr[i]).appendTo(".timeline");
-	}
-    });
-});
-	});*/
 	</script>
 
 </body>
